@@ -52,7 +52,7 @@ function Checkout() {
       };
 
       const res = await axios.post(
-        "http://localhost:5000/api/address",
+        "https://eggbasket-backend.onrender.com/api/address",
         addressData
       );
 

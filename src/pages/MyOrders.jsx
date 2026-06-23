@@ -5,7 +5,7 @@ import { io } from "socket.io-client";
 function MyOrders() {
   const isMobile = window.innerWidth <= 768;
   const [orders, setOrders] = useState([]);
-  const socket = io("http://localhost:5000");
+  const socket = io("https://eggbasket-backend.onrender.com");
 
   useEffect(() => {
     fetchOrders();
@@ -37,7 +37,7 @@ return () => {
       const user = JSON.parse(localStorage.getItem("user"));
 
       const res = await axios.get(
-        `http://localhost:5000/api/orders/${user.id || user._id}`
+        `https://eggbasket-backend.onrender.com/api/orders/${user.id || user._id}`
       );
 
       setOrders(res.data);

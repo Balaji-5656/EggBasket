@@ -18,7 +18,7 @@ function SavedAddresses() {
   const fetchAddresses = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:5000/api/address"
+        "https://eggbasket-backend.onrender.com/api/address"
       );
 
       const userAddresses = res.data.filter(
@@ -44,7 +44,7 @@ function SavedAddresses() {
 
     try {
       await axios.delete(
-        `http://localhost:5000/api/address/${id}`
+        `https://eggbasket-backend.onrender.com/api/address/${id}`
       );
 
       alert("✅ Address deleted successfully");
@@ -77,7 +77,7 @@ function SavedAddresses() {
   const handleUpdate = async () => {
     try {
       await axios.put(
-        `http://localhost:5000/api/address/${editingId}`,
+        `https://eggbasket-backend.onrender.com/api/address/${editingId}`,
         editData
       );
 

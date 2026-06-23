@@ -12,7 +12,7 @@ function AdminOrders() {
   const fetchOrders = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:5000/api/orders"
+        "https://eggbasket-backend.onrender.com/api/orders"
       );
 
       setOrders(res.data);
@@ -75,7 +75,7 @@ function AdminOrders() {
     onChange={async (e) => {
       try {
         await axios.put(
-          `http://localhost:5000/api/orders/${order._id}/status`,
+          `https://eggbasket-backend.onrender.com/api/orders/${order._id}/status`,
           {
             orderStatus: e.target.value,
           }

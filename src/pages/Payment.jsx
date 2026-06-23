@@ -69,7 +69,7 @@ address: latestAddress._id,
 };
 
       const res = await axios.post(
-        "http://localhost:5000/api/orders",
+        "https://eggbasket-backend.onrender.com/api/orders",
         orderData
       );
 
