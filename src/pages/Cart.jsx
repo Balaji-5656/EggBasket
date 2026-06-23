@@ -3,6 +3,7 @@ import { CartContext } from "../context/CartContext";
 import { FaPlus, FaMinus, FaTrash } from "react-icons/fa";
 
 function Cart() {
+  const isMobile = window.innerWidth <= 768;
   const { cartItems, removeFromCart, updateQuantity, totalPrice } = useContext(CartContext);
 
   return (
@@ -18,8 +19,10 @@ function Cart() {
               key={item.id}
               style={{
                 display: "flex",
-                alignItems: "center",
+                flexDirection: isMobile ? "column" : "row",
+                alignItems: isMobile ? "flex-start" : "center",
                 justifyContent: "space-between",
+                gap: isMobile ? "15px" : "0",
                 padding: "1rem",
                 borderRadius: "10px",
                 boxShadow: "0 2px 10px rgba(0,0,0,0.08)",
@@ -37,10 +40,11 @@ function Cart() {
               <img
                 src={item.image}
                 alt={item.name}
-                style={{ width: "100px", height: "100px", objectFit: "cover", borderRadius: "8px" }}
+                style={{ width: isMobile ? "80px" : "100px",
+height: isMobile ? "80px" : "100px", objectFit: "cover", borderRadius: "8px" }}
               />
 
-              <div style={{ flex: 1, marginLeft: "1.5rem" }}>
+              <div style={{ flex: 1, marginLeft: isMobile ? "0" : "1.5rem", }}>
                 <h3 style={{ marginBottom: "0.5rem", color: "#333" }}>{item.name}</h3>
                 <p style={{ fontWeight: "bold", color: "#4CAF50" }}>₹{item.price}</p>
               </div>
@@ -60,7 +64,7 @@ function Cart() {
                 >
                   <FaMinus />
                 </button>
-                <span style={{ minWidth: "25px", textAlign: "center" }}>{item.quantity}</span>
+                <span style={{ minWidth: "25px", textAlign: isMobile ? "center" : "right" }}>{item.quantity}</span>
                 <button
                   onClick={() => updateQuantity(item.id, item.quantity + 1)}
                   style={{
@@ -118,7 +122,7 @@ function Cart() {
             Total: ₹{totalPrice}
           </div>
 
-          <div style={{ textAlign: "right", marginTop: "1rem" }}>
+          <div style={{ textAlign: isMobile ? "center" : "right", marginTop: "1rem" }}>
             <button
               style={{
                 padding: "0.8rem 1.5rem",

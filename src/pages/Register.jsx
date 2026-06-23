@@ -1,7 +1,12 @@
 import React, { useState } from "react";
-import { FaGoogle } from "react-icons/fa";
+import { FaGoogle, FaTimes } from "react-icons/fa";
+import axios from "axios";
 
-function Register({ onSwitchToSignin }) {
+function Register({
+  isOpen,
+  onClose,
+  onSwitchToSignin,
+}) {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -12,152 +17,210 @@ function Register({ onSwitchToSignin }) {
 
   const [submitted, setSubmitted] = useState(false);
 
+  if (!isOpen) return null;
+
+  const slideAnimation = `
+    @keyframes slideInRegister {
+      from {
+        transform: translateX(100%);
+        opacity: 0.9;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+  `;
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (formData.password !== formData.confirmPassword) {
+    if (
+      formData.password !==
+      formData.confirmPassword
+    ) {
       alert("Passwords do not match!");
       return;
     }
 
-    console.log("Registration Data:", formData);
-    setSubmitted(true);
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/auth/register",
+        {
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          password: formData.password,
+        }
+      );
 
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      password: "",
-      confirmPassword: "",
-    });
-  };
+      setSubmitted(true);
 
-  const buttonStyle = {
-    width: "100%",
-    padding: "0.8rem",
-    backgroundColor: "#FF6F00",
-    color: "white",
-    border: "none",
-    borderRadius: "5px",
-    fontSize: "1rem",
-    fontWeight: "bold",
-    cursor: "pointer",
-    marginTop: "1rem",
-    transition: "background-color 0.3s, transform 0.3s",
-  };
+      alert(res.data.message);
 
-  const socialButtonStyle = {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: "0.6rem",
-    borderRadius: "5px",
-    fontWeight: "bold",
-    cursor: "pointer",
-    transition: "background-color 0.3s, transform 0.3s",
-    color: "white",
-  };
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        password: "",
+        confirmPassword: "",
+      });
 
-  const googleStyle = {
-    ...socialButtonStyle,
-    backgroundColor: "#DB4437",
-  };
+      // Close Register panel
+      onClose();
 
-  const inputStyle = {
-    width: "100%",
-    padding: "0.8rem",
-    margin: "0.5rem 0",
-    borderRadius: "5px",
-    border: "1px solid #ccc",
-    fontSize: "1rem",
-  };
+      // Open Login panel automatically
+      onSwitchToSignin();
 
-  const dividerStyle = {
-    display: "flex",
-    alignItems: "center",
-    textAlign: "center",
-    margin: "1.5rem 0",
-    fontSize: "0.9rem",
-    color: "#999",
-  };
+    } catch (err) {
+      console.error(
+        err.response?.data || err.message
+      );
 
-  const dividerLine = {
-    flex: 1,
-    height: "1px",
-    backgroundColor: "#ccc",
-  };
-
-  const linkStyle = {
-    textDecoration: "none",
-    color: "#FF6F00",
-    fontWeight: "bold",
-    transition: "color 0.3s",
+      alert(
+        err.response?.data?.message ||
+        "Registration Failed"
+      );
+    }
   };
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        background: "#f7f7f7",
-        fontFamily: "Arial, sans-serif",
-        padding: "2rem",
-      }}
-    >
+    <>
+      <style>{slideAnimation}</style>
+
+      {/* Overlay */}
+      <div
+        onClick={onClose}
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          background: "rgba(0,0,0,0.5)",
+          zIndex: 999,
+        }}
+      />
+
+      {/* Slide Panel */}
       <div
         style={{
-          maxWidth: "400px",
-          width: "100%",
-          padding: "2rem",
-          background: "white",
-          borderRadius: "10px",
-          boxShadow: "0px 8px 20px rgba(0,0,0,0.1)",
+          position: "fixed",
+          top: 0,
+          right: 0,
+          width: "400px",
+          height: "100vh",
+          background: "#fff",
+          zIndex: 1000,
+          padding: "25px",
+          overflowY: "auto",
+          boxShadow: "-4px 0 15px rgba(0,0,0,0.2)",
+          animation:
+            "slideInRegister 0.55s cubic-bezier(0.22, 1, 0.36, 1)",
         }}
       >
-        <h1
+        {/* Header */}
+        <div
           style={{
-            textAlign: "center",
-            color: "#FF6F00",
-            marginBottom: "1rem",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "20px",
           }}
         >
-          Register
-        </h1>
+          <h2
+            style={{
+              color: "#FF6F00",
+              margin: 0,
+            }}
+          >
+            Register
+          </h2>
+
+          <FaTimes
+            onClick={onClose}
+            style={{
+              cursor: "pointer",
+              fontSize: "22px",
+            }}
+          />
+        </div>
 
         {submitted && (
           <p
             style={{
               color: "green",
-              fontWeight: "bold",
               textAlign: "center",
+              fontWeight: "bold",
             }}
           >
             Registration Successful!
           </p>
         )}
 
-        {/* Google Sign Up */}
+        {/* Google Signup */}
         <button
-          style={googleStyle}
-          onMouseEnter={(e) => (e.target.style.transform = "scale(1.05)")}
-          onMouseLeave={(e) => (e.target.style.transform = "scale(1)")}
+          type="button"
+          style={{
+            width: "100%",
+            padding: "12px",
+            background: "#DB4437",
+            color: "#fff",
+            border: "none",
+            borderRadius: "5px",
+            fontWeight: "bold",
+            cursor: "pointer",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: "10px",
+          }}
         >
-          <FaGoogle style={{ marginRight: "0.5rem" }} />
+          <FaGoogle />
           Continue with Google
         </button>
 
         {/* Divider */}
-        <div style={dividerStyle}>
-          <div style={dividerLine}></div>
-          <span style={{ margin: "0 0.5rem" }}>or</span>
-          <div style={dividerLine}></div>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            margin: "20px 0",
+          }}
+        >
+          <div
+            style={{
+              flex: 1,
+              height: "1px",
+              background: "#ddd",
+            }}
+          />
+
+          <span
+            style={{
+              margin: "0 10px",
+              color: "#999",
+            }}
+          >
+            OR
+          </span>
+
+          <div
+            style={{
+              flex: 1,
+              height: "1px",
+              background: "#ddd",
+            }}
+          />
         </div>
 
         {/* Register Form */}
@@ -165,7 +228,7 @@ function Register({ onSwitchToSignin }) {
           <input
             type="text"
             name="name"
-            placeholder="Full Name*"
+            placeholder="Full Name"
             value={formData.name}
             onChange={handleChange}
             required
@@ -175,7 +238,7 @@ function Register({ onSwitchToSignin }) {
           <input
             type="email"
             name="email"
-            placeholder="Email*"
+            placeholder="Email"
             value={formData.email}
             onChange={handleChange}
             required
@@ -185,7 +248,7 @@ function Register({ onSwitchToSignin }) {
           <input
             type="tel"
             name="phone"
-            placeholder="Phone (optional)"
+            placeholder="Phone Number"
             value={formData.phone}
             onChange={handleChange}
             style={inputStyle}
@@ -194,7 +257,7 @@ function Register({ onSwitchToSignin }) {
           <input
             type="password"
             name="password"
-            placeholder="Password*"
+            placeholder="Password"
             value={formData.password}
             onChange={handleChange}
             required
@@ -204,7 +267,7 @@ function Register({ onSwitchToSignin }) {
           <input
             type="password"
             name="confirmPassword"
-            placeholder="Confirm Password*"
+            placeholder="Confirm Password"
             value={formData.confirmPassword}
             onChange={handleChange}
             required
@@ -213,33 +276,57 @@ function Register({ onSwitchToSignin }) {
 
           <button
             type="submit"
-            style={buttonStyle}
-            onMouseEnter={(e) => {
-              e.target.style.backgroundColor = "#FF8F00";
-              e.target.style.transform = "scale(1.05)";
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.backgroundColor = "#FF6F00";
-              e.target.style.transform = "scale(1)";
+            style={{
+              width: "100%",
+              padding: "12px",
+              background: "#FF6F00",
+              color: "#fff",
+              border: "none",
+              borderRadius: "5px",
+              fontWeight: "bold",
+              cursor: "pointer",
+              marginTop: "10px",
             }}
           >
             Sign Up
           </button>
         </form>
 
-        <p style={{ marginTop: "1rem", textAlign: "center" }}>
-  Already have an account?{" "}
-  <span
-    onClick={onSwitchToSignin}
-    style={{ ...linkStyle, cursor: "pointer" }}
-  >
-    Sign In
-  </span>
-</p>
-
+        {/* Switch To Login */}
+        <p
+          style={{
+            textAlign: "center",
+            marginTop: "20px",
+          }}
+        >
+          Already have an account?{" "}
+          <span
+            onClick={() => {
+              onClose();
+              onSwitchToSignin();
+            }}
+            style={{
+              color: "#FF6F00",
+              cursor: "pointer",
+              fontWeight: "bold",
+            }}
+          >
+            Sign In
+          </span>
+        </p>
       </div>
-    </div>
+    </>
   );
 }
+
+const inputStyle = {
+  width: "100%",
+  padding: "12px",
+  marginBottom: "12px",
+  border: "1px solid #ddd",
+  borderRadius: "5px",
+  fontSize: "15px",
+  boxSizing: "border-box",
+};
 
 export default Register;
