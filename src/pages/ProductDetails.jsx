@@ -189,11 +189,9 @@ const isMobile = window.innerWidth <= 768;
           >
             <button
   onClick={() => {
-    for (let i = 0; i < quantity; i++) {
-      addToCart(product, quantity);
-    }
-    navigate("/cart");
-  }}
+  addToCart(product, quantity);
+  navigate("/cart");
+}}
   style={{
     padding: "12px 25px",
     background: "#1c130d",

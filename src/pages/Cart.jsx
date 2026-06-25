@@ -1,9 +1,11 @@
 import React, { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { CartContext } from "../context/CartContext";
 import { FaPlus, FaMinus, FaTrash } from "react-icons/fa";
 
 function Cart() {
   const isMobile = window.innerWidth <= 768;
+  const navigate = useNavigate();
   const { cartItems, removeFromCart, updateQuantity, totalPrice } = useContext(CartContext);
 
   return (
@@ -124,16 +126,17 @@ height: isMobile ? "80px" : "100px", objectFit: "cover", borderRadius: "8px" }}
 
           <div style={{ textAlign: isMobile ? "center" : "right", marginTop: "1rem" }}>
             <button
-              style={{
-                padding: "0.8rem 1.5rem",
-                backgroundColor: "#4CAF50",
-                color: "white",
-                border: "none",
-                borderRadius: "25px",
-                cursor: "pointer",
-                fontWeight: "bold",
-                transition: "all 0.3s ease",
-              }}
+             onClick={() => navigate("/checkout")}
+             style={{
+              padding: "0.8rem 1.5rem",
+              backgroundColor: "#4CAF50",
+              color: "white",
+              border: "none",
+              borderRadius: "25px",
+              cursor: "pointer",
+              fontWeight: "bold",
+              transition: "all 0.3s ease",
+         }}
               onMouseEnter={(e) => {
                 e.target.style.backgroundColor = "#45a049";
                 e.target.style.transform = "scale(1.05)";

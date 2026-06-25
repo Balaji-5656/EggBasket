@@ -1,12 +1,13 @@
 
 import React, { useState } from "react";
 import { products } from "../data/products";
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import Toast from "../components/Toast";
 
 function Shop() {
   const [toastMessage, setToastMessage] = useState("");
-
+  const navigate = useNavigate();
   const isMobile = window.innerWidth <= 768;
 
   return (
@@ -135,12 +136,7 @@ function Shop() {
                       `Viewing ${product.name}`
                     );
 
-                    setTimeout(() => {
-                      setToastMessage("");
-
-                      window.location.href =
-                        `/product/${product.id}`;
-                    }, 500);
+                    
                   }}
                   style={{
                     padding: isMobile

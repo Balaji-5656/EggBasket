@@ -8,13 +8,15 @@ export const CartProvider = ({ children }) => {
   const [toastMessage, setToastMessage] = useState("");
 
   const addToCart = (product, quantity = 1) => {
-    setCartItems((prev) => {
-      const existing = prev.find(
+    console.log("Adding Product:", product);
+    setCartItems((prevItems) => {
+      console.log("Previous Cart:", prevItems);
+      const existingProduct = prevItems.find(
         (item) => item.id === product.id
       );
 
-      if (existing) {
-        return prev.map((item) =>
+      if (existingProduct) {
+        return prevItems.map((item) =>
           item.id === product.id
             ? {
                 ...item,
@@ -25,7 +27,7 @@ export const CartProvider = ({ children }) => {
       }
 
       return [
-        ...prev,
+        ...prevItems,
         {
           ...product,
           quantity,
@@ -35,14 +37,14 @@ export const CartProvider = ({ children }) => {
 
     // Toast Message
     setToastMessage(
-      `🛒 ${quantity} ${
+      `🛒 ${product.name} ${
         quantity === 1 ? "item" : "items"
       } added to cart`
     );
 
     setTimeout(() => {
       setToastMessage("");
-    }, 3000);
+    }, 2000);
   };
 
   const removeFromCart = (id) => {

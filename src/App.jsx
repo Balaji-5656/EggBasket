@@ -57,14 +57,17 @@ function App() {
                 element={<ProductDetails />}
               />
               <Route
-  path="/cart"
+  path="/checkout"
   element={
     <ProtectedRoute>
-      <Cart />
+      <Checkout />
     </ProtectedRoute>
   }
 />
-
+<Route
+  path="/cart"
+  element={<Cart />}
+/>
 <Route
   path="/account"
   element={
