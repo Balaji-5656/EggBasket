@@ -1,5 +1,7 @@
 
 const Order = require("../models/Order");
+const transporter = require("../utils/mailer");
+const User = require("../models/User");
 
 // Place Order
 const placeOrder = async (req, res) => {
@@ -11,7 +13,7 @@ const placeOrder = async (req, res) => {
       paymentMethod,
       totalAmount,
     } = req.body;
-
+    
     const order = await Order.create({
       user,
       items,
@@ -19,7 +21,26 @@ const placeOrder = async (req, res) => {
       paymentMethod,
       totalAmount,
     });
+    const userData = await User.findById(user);
 
+  await transporter.sendMail({
+  from: process.env.EMAIL_USER,
+  to: userData.email,
+  subject: "🎉 EggBasket Order Confirmed",
+  html: `
+    <h2>Hello ${userData.name},</h2>
+
+    <p>Your order has been placed successfully.</p>
+
+    <h3>Order Details</h3>
+
+    <p><b>Total Amount:</b> ₹${totalAmount}</p>
+
+    <p><b>Payment Method:</b> ${paymentMethod}</p>
+
+    <p>Thank you for shopping with <b>EggBasket 🥚</b>.</p>
+  `,
+});
     res.status(201).json({
       message: "Order placed successfully",
       order,
