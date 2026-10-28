@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.js": "/static/js/main.631c23fb.js",
+    "static/media/vitamin-eggs.jpg": "/static/media/vitamin-eggs.ac460f5cee4b46c24dc9.jpg",
+    "static/media/omega3-eggs.jpg": "/static/media/omega3-eggs.0018b9d1a08665db61df.jpg",
+    "static/media/free-range-eggs.jpg": "/static/media/free-range-eggs.b1df5eb63af9fb707abe.jpg",
+    "static/media/cage-free-eggs.jpg": "/static/media/cage-free-eggs.e1afad60e56a0a51153d.jpg",
+    "static/media/white-eggs.jpg": "/static/media/white-eggs.4a324e7c020d5bfa7761.jpg",
+    "static/media/desi-eggs.jpg": "/static/media/desi-eggs.4b64be451bcaf9cde3bb.jpg",
+    "index.html": "/index.html",
+    "main.631c23fb.js.map": "/static/js/main.631c23fb.js.map"
+  },
+  "entrypoints": [
+    "static/js/main.631c23fb.js"
+  ]
+}
