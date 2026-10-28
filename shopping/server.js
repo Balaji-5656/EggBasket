@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -8,7 +9,6 @@ const authRoutes = require("./routes/authRoutes");
 const addressRoutes = require("./routes/addressRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const productRoutes = require("./routes/productRoutes");
-const chatRoutes = require("./routes/chatRoutes");
 
 // --- DELIVERY ROUTE IMPORTS ---
 const deliveryRoutes = require("./routes/deliveryRoutes");
@@ -40,18 +40,20 @@ app.use("/api/auth", authRoutes);
 app.use("/api/address", addressRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/products", productRoutes);
-app.use("/api/chat", chatRoutes);
 
 // Delivery & Admin Delivery Routes
 app.use("/api/delivery", deliveryRoutes);
 app.use("/api/admin/delivery", adminDeliveryRoutes);
 
-// Test Route
-app.get("/", (req, res) => {
-  res.send("EggBasket Backend Running...");
+// --- SERVE REACT FRONTEND BUILD ---
+app.use(express.static(path.join(__dirname, "build")));
+
+// Fallback for React Router (SPA support using Regex to prevent path-to-regexp errors)
+app.get(/^(?!\/api).*/, (req, res) => {
+  res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 
-// Fallback 404 Route Handler
+// Fallback 404 Route Handler for API endpoints
 app.use((req, res) => {
   res.status(404).json({ message: `Cannot ${req.method} ${req.originalUrl}` });
 });
